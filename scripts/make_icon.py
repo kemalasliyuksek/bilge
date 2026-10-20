@@ -23,11 +23,13 @@ ACCENT = (92, 199, 196)  # --accent
 
 # Outputs, relative to the repository root. Wails builds the macOS .icns from
 # appicon.png and embeds icon.ico on Windows; main.go embeds appicon.png as
-# the Linux window icon.
+# the Linux window icon, and the Linux archive ships LINUX_ICON next to the
+# .desktop file for the application menu.
 ROOT = Path(__file__).resolve().parent.parent
 APPICON = ROOT / "build" / "appicon.png"
 WINDOWS_ICO = ROOT / "build" / "windows" / "icon.ico"
 UI_ICON = ROOT / "frontend" / "src" / "assets" / "icon.png"
+LINUX_ICON = ROOT / "build" / "linux" / "bilge.png"
 
 
 def s(v: float) -> int:
@@ -84,7 +86,10 @@ def main():
     UI_ICON.parent.mkdir(parents=True, exist_ok=True)
     # Shown at 24 px in the sidebar; 64 px stays sharp on 2x displays.
     master.resize((64, 64), Image.LANCZOS).save(UI_ICON)
-    for path in (APPICON, WINDOWS_ICO, UI_ICON):
+    LINUX_ICON.parent.mkdir(parents=True, exist_ok=True)
+    # 256 px is the largest size freedesktop icon themes require.
+    master.resize((256, 256), Image.LANCZOS).save(LINUX_ICON)
+    for path in (APPICON, WINDOWS_ICO, UI_ICON, LINUX_ICON):
         print("wrote", path.relative_to(ROOT))
 
 

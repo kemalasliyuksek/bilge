@@ -65,7 +65,15 @@ Her sürümde Linux, macOS (universal) ve Windows derlemeleri ile bir
 [CHANGELOG.md](CHANGELOG.md) dosyasındadır.
 
 - **Linux**: `.tar.gz` dosyasını açın ve `./bilge` ile çalıştırın. WebKitGTK
-  4.1 gerektirir (Debian ve Ubuntu'da `libwebkit2gtk-4.1-0`).
+  4.1 gerektirir (Debian ve Ubuntu'da `libwebkit2gtk-4.1-0`). Uygulama
+  menüsüne eklemek için açtığınız klasörden kendi kullanıcınıza kurun
+  (`~/.local/bin` `PATH` içinde olmalıdır):
+
+  ```sh
+  install -Dm755 bilge ~/.local/bin/bilge
+  install -Dm644 bilge.desktop ~/.local/share/applications/bilge.desktop
+  install -Dm644 bilge.png ~/.local/share/icons/hicolor/256x256/apps/bilge.png
+  ```
 - **macOS**: zip'i açın ve `bilge.app`'i Uygulamalar klasörüne taşıyın.
   Uygulama henüz imzalı olmadığı için ilk açılışta sağ tıklayıp Aç'ı seçin.
 - **Windows**: zip'i açın ve `bilge.exe`'yi çalıştırın. Dosya henüz imzalı

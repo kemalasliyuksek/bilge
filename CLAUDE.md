@@ -23,7 +23,10 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 - `internal/engine`: the only package that imports
   `github.com/moby/moby/client`. Snapshot and actions; never forces a removal.
 - `scripts/make_icon.py`: source of every app icon; `just icon` regenerates
-  `build/appicon.png`, `build/windows/icon.ico` and the sidebar icon.
+  `build/appicon.png`, `build/windows/icon.ico`, `build/linux/bilge.png` and
+  the sidebar icon.
+- `build/linux/bilge.desktop`: desktop entry shipped in the Linux archive
+  (`Exec=bilge`, so the binary must be on `PATH`); CI validates it.
 - `frontend/wailsjs`: generated bindings, regenerate with `just bindings`.
 - `.github/workflows/ci.yml`: quality gate plus Linux, macOS (universal) and
   Windows builds, packaged as archives. Also callable by the release workflow.

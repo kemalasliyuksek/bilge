@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=bilge
+Comment=Monitor, manage and clean up your Docker Engine
+Exec=bilge
+Icon=bilge
+Terminal=false
+Categories=System;Monitor;
+Keywords=docker;container;image;volume;cleanup;
+StartupWMClass=bilge

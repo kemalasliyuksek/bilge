@@ -38,7 +38,7 @@ jobs:
           persist-credentials: false
 
       - name: Install WebKitGTK
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgtk-3-dev libwebkit2gtk-4.1-dev
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgtk-3-dev libwebkit2gtk-4.1-dev desktop-file-utils
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
@@ -67,6 +67,9 @@ jobs:
 
       - name: Check
         run: just check
+
+      - name: Validate the Linux desktop entry
+        run: desktop-file-validate build/linux/bilge.desktop
 
       # The runner ships a Docker Engine; the integration test only reads it.
       - name: Integration test against the runner's Docker Engine
@@ -130,8 +133,9 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           mkdir -p dist
-          cp LICENSE README.md build/bin/
-          tar -czf "dist/bilge-$VERSION-linux-amd64.tar.gz" -C build/bin bilge LICENSE README.md
+          cp LICENSE README.md build/linux/bilge.desktop build/linux/bilge.png build/bin/
+          tar -czf "dist/bilge-$VERSION-linux-amd64.tar.gz" -C build/bin \
+            bilge bilge.desktop bilge.png LICENSE README.md
 
       # ditto keeps the bundle's symlinks and extended attributes, which a
       # plain zip would break.

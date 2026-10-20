@@ -62,7 +62,15 @@ Each release has builds for Linux, macOS (universal) and Windows and a
 --ignore-missing`. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
 - **Linux**: extract the `.tar.gz` and run `./bilge`. It needs WebKitGTK 4.1
-  (`libwebkit2gtk-4.1-0` on Debian and Ubuntu).
+  (`libwebkit2gtk-4.1-0` on Debian and Ubuntu). To add it to your application
+  menu, install it for your user from the extracted folder (`~/.local/bin`
+  must be on your `PATH`):
+
+  ```sh
+  install -Dm755 bilge ~/.local/bin/bilge
+  install -Dm644 bilge.desktop ~/.local/share/applications/bilge.desktop
+  install -Dm644 bilge.png ~/.local/share/icons/hicolor/256x256/apps/bilge.png
+  ```
 - **macOS**: unzip and move `bilge.app` to Applications. The app is not signed
   yet, so the first time right-click it and choose Open.
 - **Windows**: unzip and run `bilge.exe`. SmartScreen may warn because the

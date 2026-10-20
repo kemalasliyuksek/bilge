@@ -6,6 +6,11 @@ All notable changes to bilge are listed here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- The Linux archive ships a desktop entry and an icon, so bilge can be added
+  to the application menu.
+
 ## [0.1.0] - 2026-10-20
 
 First release.

@@ -16,6 +16,10 @@ build:
 bindings:
     wails generate module -tags "{{tags}}"
 
+# Regenerate the app icons from scripts/make_icon.py (needs Pillow)
+icon:
+    python3 scripts/make_icon.py
+
 format:
     golangci-lint fmt ./...
     cd frontend && pnpm format

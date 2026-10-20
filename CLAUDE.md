@@ -22,6 +22,8 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
   removes in dependency order.
 - `internal/engine`: the only package that imports
   `github.com/moby/moby/client`. Snapshot and actions; never forces a removal.
+- `scripts/make_icon.py`: source of every app icon; `just icon` regenerates
+  `build/appicon.png`, `build/windows/icon.ico` and the sidebar icon.
 - `frontend/wailsjs`: generated bindings, regenerate with `just bindings`.
 
 ## Commands

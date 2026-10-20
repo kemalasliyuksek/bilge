@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import { Version } from "../wailsjs/go/main/App.js";
+import icon from "./assets/icon.png";
 import { formatAge } from "./lib/format";
 import { scan } from "./lib/scan.svelte";
 import Cleanup from "./views/Cleanup.svelte";
@@ -54,7 +55,7 @@ onMount(() => {
 
 <div class="shell">
   <nav>
-    <div class="brand">bilge</div>
+    <div class="brand"><img src={icon} alt="" width="24" height="24" />bilge</div>
     {#each views as v (v.id)}
       <button type="button" class:active={current === v.id} onclick={() => (current = v.id)}>
         <span>{v.title}</span>
@@ -119,6 +120,9 @@ onMount(() => {
   }
 
   .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     padding: 0 0.75rem 1rem;
     font-weight: 600;
     font-size: 1.1rem;

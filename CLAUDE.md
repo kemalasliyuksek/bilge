@@ -18,8 +18,8 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 - `main.go`, `app.go`: Wails entry point and the methods bound to the UI.
 - `internal/inventory`: SDK-independent data model of one engine snapshot.
 - `internal/cleanup`: pure classification, Inventory -> Report. No I/O.
-- `internal/engine` (planned): the only package that imports
-  `github.com/moby/moby/client`.
+- `internal/engine`: the only package that imports
+  `github.com/moby/moby/client`. Snapshot and actions; never forces a removal.
 - `frontend/wailsjs`: generated bindings, regenerate with `just bindings`.
 
 ## Commands
@@ -34,5 +34,7 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
   networks; remove item by item so bilge, not the engine, decides what goes.
 - Linux builds need `-tags webkit2_41` (Ubuntu ships only WebKitGTK 4.1); the
   justfile adds it. `wails doctor` wrongly reports libwebkit as missing.
-- Tests must never touch a real Docker Engine; the engine package will be
-  tested against an interface or an `httptest` server.
+- Unit tests never touch a real Docker Engine; `internal/engine` tests use a
+  fake of its narrow `api` interface. The only exception is
+  `just test-integration` (build tag `integration`), which is read-only.
+- `Remove` is not bound to the frontend until the preview screen exists.

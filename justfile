@@ -41,5 +41,9 @@ test: _dist
     go test -race ./...
     cd frontend && pnpm test
 
+# Read-only checks against the local Docker Engine
+test-integration: _dist
+    go test -tags integration -run LocalEngine -v ./internal/engine/
+
 # Everything CI runs
 check: format-check lint typecheck test

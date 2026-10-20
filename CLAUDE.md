@@ -71,7 +71,7 @@ engine with neutral sample data, never from the developer's own engine:
 5. Check the draft (checksums, version string in the binary), then Kemal
    publishes it on GitHub. Never publish from here.
 
-Released: v0.1.0 (2026-10-20).
+Release history lives in `CHANGELOG.md` and on the GitHub releases page.
 
 ## Rules specific to this project
 

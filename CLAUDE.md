@@ -18,6 +18,8 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 - `main.go`, `app.go`: Wails entry point and the methods bound to the UI.
 - `internal/inventory`: SDK-independent data model of one engine snapshot.
 - `internal/cleanup`: pure classification, Inventory -> Report. No I/O.
+- `internal/sweep`: validates a removal request against a fresh scan and
+  removes in dependency order.
 - `internal/engine`: the only package that imports
   `github.com/moby/moby/client`. Snapshot and actions; never forces a removal.
 - `frontend/wailsjs`: generated bindings, regenerate with `just bindings`.
@@ -37,4 +39,7 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 - Unit tests never touch a real Docker Engine; `internal/engine` tests use a
   fake of its narrow `api` interface. The only exception is
   `just test-integration` (build tag `integration`), which is read-only.
-- `Remove` is not bound to the frontend until the preview screen exists.
+- Removal goes through `internal/sweep`, which rescans and re-classifies
+  before removing; never call `engine.Remove` from the app layer directly.
+- Manual removal tests use resources created for the test (`bilge-test-*`),
+  never the developer's own containers, volumes or build cache.

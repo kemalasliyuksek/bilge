@@ -19,7 +19,12 @@ groups instead:
 Anything in use, or labelled `bilge.keep=true`, is never offered for removal.
 The full rules are in [docs/design.md](docs/design.md).
 
-> Status: early development. Nothing is removed yet.
+Before anything is removed, bilge scans the engine again and skips every item
+that changed since you looked: a volume a container just mounted is left alone.
+A named volume must be confirmed by typing its name.
+
+> Status: early development. Try it on an engine you can afford to lose things
+> on before trusting it with one you cannot.
 
 Docker is a trademark of Docker, Inc. bilge is an independent project and is
 not affiliated with or endorsed by Docker, Inc.

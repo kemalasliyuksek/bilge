@@ -7,6 +7,8 @@ export type Column<T> = {
   // Initial width in px. The last column has none and takes the rest.
   width?: number;
   align?: "right";
+  // Fixed columns keep their width; no resize handle.
+  fixed?: boolean;
   title?: string;
   sort?: (row: T) => SortValue;
 };
@@ -100,7 +102,7 @@ function resetWidth(col: Column<T>) {
             {:else}
               {col.label}
             {/if}
-            {#if col.width}
+            {#if col.width && !col.fixed}
               <button
                 type="button"
                 class="grip"

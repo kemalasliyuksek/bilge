@@ -1,10 +1,12 @@
 import {
+  Remove,
   RestartContainer,
   Scan,
   StartContainer,
   StopContainer,
 } from "../../wailsjs/go/main/App.js";
-import type { main } from "../../wailsjs/go/models";
+import type { main, sweep } from "../../wailsjs/go/models";
+import { EventsOn } from "../../wailsjs/runtime/runtime.js";
 
 type ContainerAction = "start" | "stop" | "restart";
 
@@ -27,6 +29,9 @@ class ScanState {
   error = $state("");
   // ID of the container whose action is running, so only its row is disabled.
   busy = $state("");
+  removing = $state(false);
+  // Results of the running or last removal, filled as progress events arrive.
+  progress = $state<sweep.Result[]>([]);
 
   async refresh(): Promise<void> {
     this.loading = true;
@@ -50,6 +55,28 @@ class ScanState {
       this.busy = "";
     }
     await this.refresh();
+  }
+
+  // remove returns the final results, or throws when nothing was attempted
+  // (for example a review item sent together with others).
+  async remove(reqs: sweep.Request[]): Promise<sweep.Result[]> {
+    this.removing = true;
+    this.progress = [];
+    const stop = EventsOn("sweep:progress", (r: sweep.Result) => {
+      this.progress = [...this.progress, r];
+    });
+    try {
+      const results = await Remove(reqs);
+      // The final list is authoritative; events are only for live feedback.
+      this.progress = results;
+      return results;
+    } catch (err) {
+      throw new Error(message(err));
+    } finally {
+      stop();
+      this.removing = false;
+      await this.refresh();
+    }
   }
 }
 

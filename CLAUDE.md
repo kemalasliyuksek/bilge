@@ -1,7 +1,7 @@
 # bilge
 
 Cross-platform desktop app (Go + Wails v2, Svelte 5 + TypeScript frontend) that
-lists Docker Engine resources and removes waste safely. Personal open source
+monitors, manages and cleans up a Docker Engine. Personal open source
 project, MIT. Design and cleanup rules: `docs/design.md`.
 
 ## Overrides of the global rules
@@ -29,6 +29,13 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 ## Commands
 
 `just --list` shows everything. `just check` is the quality gate.
+
+## README
+
+`README.md` and `README.tr.md` say the same thing; change both together.
+Screenshots in `docs/screenshots/` are taken from an isolated `docker:dind`
+engine with neutral sample data (connected through `DOCKER_HOST`), never from
+the developer's own engine.
 
 ## Releasing
 

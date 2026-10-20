@@ -2,9 +2,10 @@
 
 ## Goal
 
-A small, cross-platform desktop app that shows what a Docker Engine holds
-(containers, images, volumes, networks, build cache) and helps remove what is
-truly waste, without ever surprising the user by deleting data.
+A small, cross-platform desktop app to monitor, manage and clean up a Docker
+Engine: it shows what the engine holds (containers, images, volumes, networks,
+build cache) and what it costs on disk, starts and stops containers, and
+removes what is truly waste without ever surprising the user by deleting data.
 
 The built-in `docker system prune` and the "Prune" buttons in existing GUIs use
 Docker's own definition of reclaimable: anything not referenced right now. That
@@ -13,7 +14,8 @@ leftover anonymous volume. bilge separates the two.
 
 ## Non-goals (for now)
 
-- Remote hosts, contexts other than the local default, Swarm, Kubernetes.
+- Switching between hosts or contexts in the UI, Swarm, Kubernetes. The engine
+  named by `DOCKER_HOST` is used when set.
 - Building, pulling or running new containers.
 - Log viewers, exec shells, live charts.
 

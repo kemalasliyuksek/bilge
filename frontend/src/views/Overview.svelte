@@ -47,8 +47,10 @@ const topColumns: Column<Item>[] = [
     </div>
     <div>
       <div class="label">Needs review</div>
-      <div class="big">{formatBytes(reviewSize)}</div>
-      <div class="sub">{reviewCount} {reviewCount === 1 ? "item" : "items"}</div>
+      <div class="big">
+        {formatBytes(reviewSize)}
+        <span class="sub count">{reviewCount} {reviewCount === 1 ? "item" : "items"}</span>
+      </div>
     </div>
     <div class="cta">
       <button type="button" class="primary" onclick={() => open("cleanup")}>Open cleanup</button>
@@ -155,6 +157,11 @@ const topColumns: Column<Item>[] = [
   .big {
     font-size: 2rem;
     font-weight: 600;
+  }
+
+  .count {
+    margin-left: 0.25rem;
+    font-weight: 400;
   }
 
   .safe-text {

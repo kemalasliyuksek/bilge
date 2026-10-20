@@ -67,7 +67,12 @@ const base: Column<C>[] = [
   },
 ];
 const safeColumns: Column<C>[] = [{ id: "pick", label: "", width: 44, fixed: true }, ...base, { id: "reason", label: "Reason" }];
-const reviewColumns: Column<C>[] = [...base, { id: "reason", label: "Reason", width: 360 }, { id: "act", label: "" }];
+// Reason takes the remaining width so the Remove button never scrolls away.
+const reviewColumns: Column<C>[] = [
+  ...base,
+  { id: "reason", label: "Reason" },
+  { id: "act", label: "", width: 110, fixed: true },
+];
 </script>
 
 {#snippet cells(c: C)}

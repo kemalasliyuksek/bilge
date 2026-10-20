@@ -47,7 +47,7 @@ let {
   }
 
   input {
-    width: 16rem;
+    width: 20rem;
     padding: 0.35rem 0.6rem;
     border: 1px solid var(--line);
     border-radius: 6px;

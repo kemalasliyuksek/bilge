@@ -37,7 +37,7 @@ const columns: Column<C>[] = [
   { id: "image", label: "Image", width: 240, sort: (c) => shortRef(c.image) },
   { id: "state", label: "State", width: 160, sort: (c) => c.state },
   { id: "size", label: "Writable layer", width: 110, align: "right", sort: (c) => c.sizeRw },
-  { id: "created", label: "Created", width: 110, sort: (c) => c.created },
+  { id: "created", label: "Created", width: 140, sort: (c) => c.created },
   { id: "actions", label: "" },
 ];
 </script>

@@ -91,7 +91,7 @@ const statusText = (r: sweep.Result | undefined) => {
 
   {#if phase === "confirm" && mustType && single}
     <label class="typed">
-      This is a named volume and may hold data. Type <code>{single.name}</code> to confirm.
+      <span>This is a named volume and may hold data. Type <code>{single.name}</code> to confirm.</span>
       <input bind:value={typed} autocomplete="off" spellcheck="false" />
     </label>
   {/if}

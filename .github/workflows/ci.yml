@@ -116,6 +116,17 @@ jobs:
         env:
           INPUT_VERSION: ${{ inputs.version }}
 
+      # The Windows file version and the macOS bundle version come from
+      # wails.json and must be plain MAJOR.MINOR.PATCH, so a tag's pre-release
+      # suffix is dropped and untagged builds stay 0.0.0.
+      - name: Stamp the product version
+        shell: bash
+        run: |
+          product="0.0.0"
+          if [[ "$VERSION" =~ ^v([0-9]+\.[0-9]+\.[0-9]+) ]]; then product="${BASH_REMATCH[1]}"; fi
+          node -e 'const fs = require("fs"); const j = JSON.parse(fs.readFileSync("wails.json")); j.info.productVersion = process.argv[1]; fs.writeFileSync("wails.json", JSON.stringify(j, null, 2) + "\n");' "$product"
+          echo "product version: $product"
+
       # Called directly rather than through just: the justfile uses sh, which
       # is not a given on Windows runners. macOS builds a universal binary so
       # one download runs on both Apple silicon and Intel Macs.

@@ -9,5 +9,12 @@
   "author": {
     "name": "Kemal Aslıyüksek",
     "email": "kemal@kemalasliyuksek.com"
+  },
+  "info": {
+    "companyName": "Kemal Aslıyüksek",
+    "productName": "bilge",
+    "productVersion": "0.0.0",
+    "copyright": "Copyright (c) 2026 Kemal Aslıyüksek",
+    "comments": "Monitor, manage and clean up your Docker Engine"
   }
 }

@@ -30,6 +30,14 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 
 `just --list` shows everything. `just check` is the quality gate.
 
+## Releasing
+
+1. Make sure `main` is green in CI.
+2. `git tag -a vX.Y.Z -m "vX.Y.Z"` and push the tag (needs Kemal's approval).
+3. The Release workflow validates the tag, reruns CI with that version and
+   creates a **draft** release with the three archives and `SHA256SUMS`.
+4. Kemal reviews the draft on GitHub and publishes it. Never publish from here.
+
 ## Rules specific to this project
 
 - A cleanup rule change starts in `docs/design.md`, then a test in

@@ -31,6 +31,14 @@ A named volume must be confirmed by typing its name.
 Docker is a trademark of Docker, Inc. bilge is an independent project and is
 not affiliated with or endorsed by Docker, Inc.
 
+## Download
+
+Builds for Linux, macOS (universal) and Windows are attached to each
+[release](https://github.com/kemalasliyuksek/bilge/releases), together with a
+`SHA256SUMS` file. The binaries are not signed yet: macOS asks you to confirm
+the first launch (right-click, Open) and Windows SmartScreen may warn as well.
+On Linux bilge needs WebKitGTK 4.1 (`libwebkit2gtk-4.1-0` on Debian and Ubuntu).
+
 ## Requirements
 
 - Go 1.25+

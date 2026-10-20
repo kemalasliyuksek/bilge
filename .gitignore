@@ -1,0 +1,31 @@
+# Build output
+build/bin/
+frontend/dist/
+
+# Dependencies
+node_modules/
+
+# Go
+*.test
+*.out
+coverage.*
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Claude Code session state
+.claude/session-state.md
+.claude/settings.local.json
+
+# Editors and OS
+.idea/
+.DS_Store
+
+# Wails dependency cache
+frontend/package.json.md5

@@ -79,3 +79,28 @@ the cache record but the data stays on disk. This matches the engine's own
   to records that are not in use.
 - The engine rejects removing an image or volume that became in use after the
   scan. That error is shown as "skipped, now in use", not as a failure.
+
+### What the backend enforces
+
+The UI is not trusted to have current data or to follow the rules. Before
+removing anything the backend:
+
+1. Takes a fresh snapshot and classifies it again.
+2. Skips every requested item that is no longer a candidate, or whose verdict
+   changed since the user saw it ("skipped, changed since the scan").
+3. Rejects a request that contains a review item together with anything else.
+   Review items are removed one per request.
+4. Removes in dependency order: containers, then images, volumes, networks,
+   and the build cache last. Removing a container never makes bilge remove
+   something it did not list.
+
+Each item ends as `removed`, `skipped` (with the reason) or `failed` (with the
+engine's error). Progress is reported per item while the removal runs.
+
+### What the UI asks
+
+- Safe items: a checkbox per item, all selected by default, one confirmation
+  dialog that lists every selected item and the expected space.
+- Review items: no bulk selection. Each has its own "Remove" button and its own
+  confirmation dialog showing the reason. A named volume additionally requires
+  typing its name, because it is the one kind that can hold irreplaceable data.

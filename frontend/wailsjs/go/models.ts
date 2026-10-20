@@ -394,3 +394,46 @@ export namespace main {
 
 }
 
+export namespace sweep {
+	
+	export class Request {
+	    kind: string;
+	    id: string;
+	    verdict: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Request(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.id = source["id"];
+	        this.verdict = source["verdict"];
+	    }
+	}
+	export class Result {
+	    kind: string;
+	    id: string;
+	    name: string;
+	    status: string;
+	    message: string;
+	    freed: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Result(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.status = source["status"];
+	        this.message = source["message"];
+	        this.freed = source["freed"];
+	    }
+	}
+
+}
+

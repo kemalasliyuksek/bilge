@@ -1,15 +1,41 @@
 :root {
   --bg: #ffffff;
+  --panel: #f6f7f8;
   --fg: #1d1f21;
-  --muted: #6b7075;
+  --muted: #687076;
+  --line: #e1e4e6;
+  --chip: #eceef0;
+  --accent: #0b6e70;
+  --accent-bg: #e0f1f1;
+  --ok: #1d6b3a;
+  --ok-bg: #e3f3e8;
+  --safe: #0b6e70;
+  --safe-bg: #e0f1f1;
+  --warn: #8a5a00;
+  --warn-bg: #fbf0d9;
+  --bad: #a1262b;
+  --bad-bg: #fbe5e6;
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1d1f21;
-    --fg: #e6e6e6;
-    --muted: #9aa0a6;
+    --bg: #17191b;
+    --panel: #1e2123;
+    --fg: #e4e6e7;
+    --muted: #9ba1a6;
+    --line: #2e3235;
+    --chip: #2a2e31;
+    --accent: #5cc7c4;
+    --accent-bg: #173a3a;
+    --ok: #74d197;
+    --ok-bg: #1c3527;
+    --safe: #5cc7c4;
+    --safe-bg: #173a3a;
+    --warn: #e9b858;
+    --warn-bg: #3b301a;
+    --bad: #f08a8e;
+    --bad-bg: #42222439;
   }
 }
 
@@ -19,4 +45,79 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+}
+
+button {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: ui-monospace, "JetBrains Mono", "Cascadia Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  overflow-wrap: break-word;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.actions button + button {
+  margin-left: 0.25rem;
+}
+
+.nowrap {
+  white-space: nowrap;
 }

@@ -17,7 +17,7 @@ gösterir, container'ları başlatıp durdurmanızı sağlar ve hâlâ ihtiyacı
 şeylere dokunmadan gerçekten artık olanları siler. Linux, macOS ve Windows'ta
 çalışır; yerel engine'e ya da `DOCKER_HOST` ile belirtilene bağlanır.
 
-> Durum: erken geliştirme aşamasında. Güvenmeden önce, bir şey kaybetmeyi göze
+> Durum: erken geliştirme aşamasında (v0.1.0). Güvenmeden önce, bir şey kaybetmeyi göze
 > alabileceğiniz bir engine üzerinde deneyin.
 
 ## Neler yapar
@@ -58,12 +58,18 @@ bağladığı bir volume'ü. Kuralların tamamı (İngilizce)
 
 ## İndirme
 
-Linux, macOS (universal) ve Windows derlemeleri her
-[release](https://github.com/kemalasliyuksek/bilge/releases) sayfasında bir
-`SHA256SUMS` dosyasıyla birlikte yer alır. Dosyalar henüz imzalı değildir:
-macOS ilk açılışta onay ister (sağ tık, Aç), Windows SmartScreen de uyarı
-gösterebilir. Linux'ta bilge WebKitGTK 4.1 gerektirir (Debian ve Ubuntu'da
-`libwebkit2gtk-4.1-0`).
+[Son sürümü](https://github.com/kemalasliyuksek/bilge/releases/latest) indirin.
+Her sürümde Linux, macOS (universal) ve Windows derlemeleri ile bir
+`SHA256SUMS` dosyası bulunur; indirdiğiniz dosyayı `sha256sum -c SHA256SUMS
+--ignore-missing` ile doğrulayabilirsiniz. Değişiklikler (İngilizce)
+[CHANGELOG.md](CHANGELOG.md) dosyasındadır.
+
+- **Linux**: `.tar.gz` dosyasını açın ve `./bilge` ile çalıştırın. WebKitGTK
+  4.1 gerektirir (Debian ve Ubuntu'da `libwebkit2gtk-4.1-0`).
+- **macOS**: zip'i açın ve `bilge.app`'i Uygulamalar klasörüne taşıyın.
+  Uygulama henüz imzalı olmadığı için ilk açılışta sağ tıklayıp Aç'ı seçin.
+- **Windows**: zip'i açın ve `bilge.exe`'yi çalıştırın. Dosya henüz imzalı
+  olmadığı için SmartScreen uyarı gösterebilir.
 
 ## Geliştirme
 

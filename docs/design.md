@@ -27,12 +27,15 @@ internal/engine         talks to the Docker Engine API, produces an Inventory,
                         performs actions (start, stop, remove, prune)
 internal/inventory      plain data model of one snapshot of the engine
 internal/cleanup        pure classification: Inventory -> Report
+internal/sweep          checks a removal request against a fresh scan and
+                        removes in dependency order
 frontend/               Svelte + TypeScript UI
 ```
 
 `cleanup` has no I/O and no dependency on the Docker SDK. Every rule below is a
 unit test against a hand-built `Inventory`. `engine` is the only package that
-imports `github.com/moby/moby/client`.
+imports `github.com/moby/moby/client`. `sweep` is the only path from the UI to
+a removal; see "What the backend enforces" below.
 
 Usage is derived from the container list, not from counters returned by the
 API. `ImageList` reports `Containers: -1` unless asked for disk usage, and

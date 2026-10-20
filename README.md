@@ -16,7 +16,7 @@ and stop containers, and removes what is actually waste without touching what
 you still need. It runs on Linux, macOS and Windows and talks to the local
 engine, or to the one named by `DOCKER_HOST`.
 
-> Status: early development. Try it on an engine you can afford to lose things
+> Status: early development (v0.1.0). Try it on an engine you can afford to lose things
 > on before trusting it with one you cannot.
 
 ## What it does
@@ -56,11 +56,17 @@ full rules are in [docs/design.md](docs/design.md).
 
 ## Download
 
-Builds for Linux, macOS (universal) and Windows are attached to each
-[release](https://github.com/kemalasliyuksek/bilge/releases), together with a
-`SHA256SUMS` file. The binaries are not signed yet: macOS asks you to confirm
-the first launch (right-click, Open) and Windows SmartScreen may warn as well.
-On Linux bilge needs WebKitGTK 4.1 (`libwebkit2gtk-4.1-0` on Debian and Ubuntu).
+Get the [latest release](https://github.com/kemalasliyuksek/bilge/releases/latest).
+Each release has builds for Linux, macOS (universal) and Windows and a
+`SHA256SUMS` file; check a download with `sha256sum -c SHA256SUMS
+--ignore-missing`. Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+
+- **Linux**: extract the `.tar.gz` and run `./bilge`. It needs WebKitGTK 4.1
+  (`libwebkit2gtk-4.1-0` on Debian and Ubuntu).
+- **macOS**: unzip and move `bilge.app` to Applications. The app is not signed
+  yet, so the first time right-click it and choose Open.
+- **Windows**: unzip and run `bilge.exe`. SmartScreen may warn because the
+  binary is not signed yet.
 
 ## Development
 

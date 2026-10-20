@@ -25,27 +25,56 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 - `scripts/make_icon.py`: source of every app icon; `just icon` regenerates
   `build/appicon.png`, `build/windows/icon.ico` and the sidebar icon.
 - `frontend/wailsjs`: generated bindings, regenerate with `just bindings`.
+- `.github/workflows/ci.yml`: quality gate plus Linux, macOS (universal) and
+  Windows builds, packaged as archives. Also callable by the release workflow.
+- `.github/workflows/release.yml`: on a `v*` tag, validates it, reruns CI with
+  that version and drafts a GitHub release.
+- `CHANGELOG.md`: Keep a Changelog format; the source of release notes.
+- `docs/screenshots/`: README images (see README below).
 
 ## Commands
 
 `just --list` shows everything. `just check` is the quality gate.
+`just test-integration` runs the read-only check against the local engine,
+`just icon` regenerates the icons.
 
 ## README
 
 `README.md` and `README.tr.md` say the same thing; change both together.
 Screenshots in `docs/screenshots/` are taken from an isolated `docker:dind`
-engine with neutral sample data (connected through `DOCKER_HOST`), never from
-the developer's own engine.
+engine with neutral sample data, never from the developer's own engine:
+
+1. `docker run -d --privileged --name bilge-demo -p 127.0.0.1:23750:2375
+   -e DOCKER_TLS_CERTDIR= docker:29-dind` (loopback only).
+2. With `DOCKER_HOST=tcp://127.0.0.1:23750`, create a running Compose project
+   (`shop`), a removed one that leaves its volume (`blog`), a stopped one
+   (`analytics`), a stopped standalone container, an anonymous volume, an
+   empty network, an untagged build and some build cache.
+3. `DOCKER_HOST=tcp://127.0.0.1:23750 just dev`, then capture 1280x800 at 2x
+   with headless Chrome: overview (light and dark), containers, cleanup and
+   the named-volume dialog.
+4. Remove the demo: `docker rm -f -v bilge-demo` and `docker rmi docker:29-dind`.
 
 ## Releasing
 
-1. Make sure `main` is green in CI.
+1. Move the `[Unreleased]` entries in `CHANGELOG.md` under the new version
+   and commit. Make sure `main` is green in CI.
 2. `git tag -a vX.Y.Z -m "vX.Y.Z"` and push the tag (needs Kemal's approval).
 3. The Release workflow validates the tag, reruns CI with that version and
    creates a **draft** release with the three archives and `SHA256SUMS`.
-4. Kemal reviews the draft on GitHub and publishes it. Never publish from here.
+4. GitHub's generated notes are empty here (work goes straight to `main`, no
+   pull requests), so put the changelog entry on the draft with
+   `gh release edit vX.Y.Z --notes-file <file>`.
+5. Check the draft (checksums, version string in the binary), then Kemal
+   publishes it on GitHub. Never publish from here.
+
+Released: v0.1.0 (2026-10-20).
 
 ## Rules specific to this project
+
+- Commit only after Kemal has seen a summary of the change (what, why, how it
+  was verified) and asked for it. Pushes need his approval too.
+- Add user-facing changes to `CHANGELOG.md` under `[Unreleased]`.
 
 - A cleanup rule change starts in `docs/design.md`, then a test in
   `internal/cleanup`, then the code.

@@ -1,5 +1,7 @@
 # bilge
 
+[![CI](https://github.com/kemalasliyuksek/bilge/actions/workflows/ci.yml/badge.svg)](https://github.com/kemalasliyuksek/bilge/actions/workflows/ci.yml)
+
 A careful cleaner for Docker.
 
 bilge is a small desktop app that shows what your Docker Engine holds

@@ -81,9 +81,25 @@ type BuildCacheRecord struct {
 	LastUsedAt *time.Time `json:"lastUsedAt"`
 }
 
+// EngineInfo describes the daemon itself, for the overview screen.
+type EngineInfo struct {
+	Name          string `json:"name"`
+	Version       string `json:"version"`
+	APIVersion    string `json:"apiVersion"`
+	OS            string `json:"os"`
+	OSType        string `json:"osType"`
+	Architecture  string `json:"architecture"`
+	KernelVersion string `json:"kernelVersion"`
+	StorageDriver string `json:"storageDriver"`
+	RootDir       string `json:"rootDir"`
+	CPUs          int    `json:"cpus"`
+	MemoryBytes   int64  `json:"memoryBytes"`
+}
+
 // Inventory is everything bilge knows about the engine at one point in time.
 type Inventory struct {
 	TakenAt    time.Time          `json:"takenAt"`
+	Engine     EngineInfo         `json:"engine"`
 	Containers []Container        `json:"containers"`
 	Images     []Image            `json:"images"`
 	Volumes    []Volume           `json:"volumes"`

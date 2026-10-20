@@ -34,6 +34,8 @@ type api interface {
 	VolumeRemove(context.Context, string, client.VolumeRemoveOptions) (client.VolumeRemoveResult, error)
 	NetworkRemove(context.Context, string, client.NetworkRemoveOptions) (client.NetworkRemoveResult, error)
 	BuildCachePrune(context.Context, client.BuildCachePruneOptions) (client.BuildCachePruneResult, error)
+	Info(context.Context, client.InfoOptions) (client.SystemInfoResult, error)
+	ClientVersion() string
 	Close() error
 }
 
@@ -75,7 +77,13 @@ func (e *Engine) Snapshot(ctx context.Context) (inventory.Inventory, error) {
 	if err != nil {
 		return inventory.Inventory{}, fmt.Errorf("list networks: %w", err)
 	}
+	info, err := e.api.Info(ctx, client.InfoOptions{})
+	if err != nil {
+		return inventory.Inventory{}, fmt.Errorf("read engine info: %w", err)
+	}
 	return inventory.Inventory{
+		// ClientVersion is the negotiated API version once a request has run.
+		Engine:     toEngineInfo(info.Info, e.api.ClientVersion()),
 		Containers: mapSlice(cs.Items, toContainer),
 		Images:     mapSlice(du.Images.Items, toImage),
 		Volumes:    mapSlice(du.Volumes.Items, toVolume),

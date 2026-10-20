@@ -9,6 +9,7 @@ import (
 	"github.com/moby/moby/api/types/image"
 	"github.com/moby/moby/api/types/mount"
 	"github.com/moby/moby/api/types/network"
+	"github.com/moby/moby/api/types/system"
 	"github.com/moby/moby/api/types/volume"
 
 	"github.com/kemalasliyuksek/bilge/internal/inventory"
@@ -98,5 +99,21 @@ func toBuildCacheRecord(r build.CacheRecord) inventory.BuildCacheRecord {
 		Shared:     r.Shared,
 		Size:       r.Size,
 		LastUsedAt: r.LastUsedAt,
+	}
+}
+
+func toEngineInfo(i system.Info, apiVersion string) inventory.EngineInfo {
+	return inventory.EngineInfo{
+		Name:          i.Name,
+		Version:       i.ServerVersion,
+		APIVersion:    apiVersion,
+		OS:            i.OperatingSystem,
+		OSType:        i.OSType,
+		Architecture:  i.Architecture,
+		KernelVersion: i.KernelVersion,
+		StorageDriver: i.Driver,
+		RootDir:       i.DockerRootDir,
+		CPUs:          i.NCPU,
+		MemoryBytes:   i.MemTotal,
 	}
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/moby/moby/api/types/image"
 	"github.com/moby/moby/api/types/mount"
 	"github.com/moby/moby/api/types/network"
+	"github.com/moby/moby/api/types/system"
 	"github.com/moby/moby/api/types/volume"
 	"github.com/moby/moby/client"
 
@@ -52,6 +53,12 @@ func (f *fakeAPI) DiskUsage(_ context.Context, o client.DiskUsageOptions) (clien
 func (f *fakeAPI) NetworkList(context.Context, client.NetworkListOptions) (client.NetworkListResult, error) {
 	return client.NetworkListResult{Items: f.networks}, nil
 }
+
+func (f *fakeAPI) Info(context.Context, client.InfoOptions) (client.SystemInfoResult, error) {
+	return client.SystemInfoResult{Info: system.Info{ServerVersion: "29.9.1", Driver: "overlayfs", NCPU: 32}}, nil
+}
+
+func (f *fakeAPI) ClientVersion() string { return "1.56" }
 
 func (f *fakeAPI) ContainerRemove(_ context.Context, id string, o client.ContainerRemoveOptions) (client.ContainerRemoveResult, error) {
 	f.calls = append(f.calls, "ContainerRemove "+id)
@@ -166,6 +173,9 @@ func TestSnapshot(t *testing.T) {
 	}
 	if b := inv.BuildCache[0]; b.Size != 7 || !b.LastUsedAt.Equal(lastUsed) {
 		t.Errorf("build cache = %+v", b)
+	}
+	if eng := inv.Engine; eng.Version != "29.9.1" || eng.APIVersion != "1.56" || eng.StorageDriver != "overlayfs" || eng.CPUs != 32 {
+		t.Errorf("engine info = %+v", eng)
 	}
 	if inv.Networks[0].ID != "n1" {
 		t.Errorf("networks = %+v", inv.Networks)

@@ -73,7 +73,11 @@ Her sürümde Linux, macOS (universal) ve Windows derlemeleri ile bir
   install -Dm755 bilge ~/.local/bin/bilge
   install -Dm644 bilge.desktop ~/.local/share/applications/bilge.desktop
   install -Dm644 bilge.png ~/.local/share/icons/hicolor/256x256/apps/bilge.png
+  touch ~/.local/share/icons/hicolor
   ```
+
+  Son satır, çalışan GNOME Shell'in ikonları yeniden taramasını sağlar; bu
+  olmadan bilge, oturumu kapatıp açana kadar menüde ikonsuz görünür.
 - **macOS**: zip'i açın ve `bilge.app`'i Uygulamalar klasörüne taşıyın.
   Uygulama henüz imzalı olmadığı için ilk açılışta sağ tıklayıp Aç'ı seçin.
 - **Windows**: zip'i açın ve `bilge.exe`'yi çalıştırın. Dosya henüz imzalı

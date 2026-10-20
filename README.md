@@ -70,7 +70,11 @@ Each release has builds for Linux, macOS (universal) and Windows and a
   install -Dm755 bilge ~/.local/bin/bilge
   install -Dm644 bilge.desktop ~/.local/share/applications/bilge.desktop
   install -Dm644 bilge.png ~/.local/share/icons/hicolor/256x256/apps/bilge.png
+  touch ~/.local/share/icons/hicolor
   ```
+
+  The last line makes a running GNOME Shell rescan your icons; without it the
+  menu shows bilge without its icon until you log out and back in.
 - **macOS**: unzip and move `bilge.app` to Applications. The app is not signed
   yet, so the first time right-click it and choose Open.
 - **Windows**: unzip and run `bilge.exe`. SmartScreen may warn because the

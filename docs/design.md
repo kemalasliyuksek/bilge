@@ -65,6 +65,11 @@ string.
 Reclaimable size for an image is `Size - SharedSize`: layers shared with other
 images are not freed by removing one of them.
 
+Reclaimable size for the build cache counts only records that are neither in
+use nor shared. Shared records hold layers that images also use; pruning drops
+the cache record but the data stays on disk. This matches the engine's own
+`Reclaimable` figure in `/system/df`.
+
 ## Removal
 
 - Removal always starts with a preview: the exact list and the expected space.

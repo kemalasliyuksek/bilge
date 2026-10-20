@@ -143,11 +143,15 @@ func TestBuildCache(t *testing.T) {
 	if !ok {
 		t.Fatal("build cache: no candidate")
 	}
-	if c.Size != 30 {
-		t.Errorf("build cache size = %d, want 30 (in-use records excluded)", c.Size)
+	if c.Size != 10 {
+		t.Errorf("build cache size = %d, want 10 (in-use and shared records free nothing)", c.Size)
 	}
 
 	r = Classify(inventory.Inventory{BuildCache: []inventory.BuildCacheRecord{{ID: "c", InUse: true}}})
+	expectAbsent(t, r, KindBuildCache, "build-cache")
+
+	// Only shared records left: pruning frees no space, so nothing to offer.
+	r = Classify(inventory.Inventory{BuildCache: []inventory.BuildCacheRecord{{ID: "b", Size: 20, Shared: true}}})
 	expectAbsent(t, r, KindBuildCache, "build-cache")
 }
 

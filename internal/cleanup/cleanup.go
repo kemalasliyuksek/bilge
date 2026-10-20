@@ -231,11 +231,13 @@ func networks(ns []inventory.Network, u usage) []Candidate {
 
 // buildCache folds all unused records into one candidate: individual records
 // mean nothing to a user, and they are removed together through one prune call.
+// Shared records are left out of the count: their layers belong to images too,
+// so pruning them frees nothing.
 func buildCache(rs []inventory.BuildCacheRecord) (Candidate, bool) {
 	var size int64
 	var n int
 	for _, r := range rs {
-		if r.InUse {
+		if r.InUse || r.Shared {
 			continue
 		}
 		n++

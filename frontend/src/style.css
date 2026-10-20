@@ -15,6 +15,10 @@
   --warn-bg: #fbf0d9;
   --bad: #a1262b;
   --bad-bg: #fbe5e6;
+  /* Chart series, validated for CVD separation and contrast on --bg. */
+  --series-kept: #3b72c9;
+  --series-review: #b87708;
+  --series-safe: #0a9384;
   color-scheme: light dark;
 }
 
@@ -36,6 +40,9 @@
     --warn-bg: #3b301a;
     --bad: #f08a8e;
     --bad-bg: #42222439;
+    --series-kept: #4a84d8;
+    --series-review: #c28724;
+    --series-safe: #1c9f91;
   }
 }
 
@@ -120,4 +127,21 @@ th {
 
 .nowrap {
   white-space: nowrap;
+}
+
+/* Cells in data tables stay on one line and truncate, so resizing a column
+   never changes row heights; the full text is in the title tooltip. */
+.data td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data td > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data td.wrap {
+  white-space: normal;
 }

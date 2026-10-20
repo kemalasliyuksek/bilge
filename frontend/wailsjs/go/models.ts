@@ -151,6 +151,38 @@ export namespace inventory {
 		    return a;
 		}
 	}
+	export class EngineInfo {
+	    name: string;
+	    version: string;
+	    apiVersion: string;
+	    os: string;
+	    osType: string;
+	    architecture: string;
+	    kernelVersion: string;
+	    storageDriver: string;
+	    rootDir: string;
+	    cpus: number;
+	    memoryBytes: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new EngineInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.version = source["version"];
+	        this.apiVersion = source["apiVersion"];
+	        this.os = source["os"];
+	        this.osType = source["osType"];
+	        this.architecture = source["architecture"];
+	        this.kernelVersion = source["kernelVersion"];
+	        this.storageDriver = source["storageDriver"];
+	        this.rootDir = source["rootDir"];
+	        this.cpus = source["cpus"];
+	        this.memoryBytes = source["memoryBytes"];
+	    }
+	}
 	export class Image {
 	    id: string;
 	    tags: string[];
@@ -279,6 +311,7 @@ export namespace inventory {
 	export class Inventory {
 	    // Go type: time
 	    takenAt: any;
+	    engine: EngineInfo;
 	    containers: Container[];
 	    images: Image[];
 	    volumes: Volume[];
@@ -292,6 +325,7 @@ export namespace inventory {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.takenAt = this.convertValues(source["takenAt"], null);
+	        this.engine = this.convertValues(source["engine"], EngineInfo);
 	        this.containers = this.convertValues(source["containers"], Container);
 	        this.images = this.convertValues(source["images"], Image);
 	        this.volumes = this.convertValues(source["volumes"], Volume);

@@ -99,8 +99,10 @@ engine's error). Progress is reported per item while the removal runs.
 
 ### What the UI asks
 
-- Safe items: a checkbox per item, all selected by default, one confirmation
-  dialog that lists every selected item and the expected space.
+- Safe items: a checkbox per item, one confirmation dialog that lists every
+  selected item and the expected space. Everything is selected by default
+  except the build cache: removing it loses no data, but the next builds that
+  relied on it run from scratch, so it is an explicit choice.
 - Review items: no bulk selection. Each has its own "Remove" button and its own
   confirmation dialog showing the reason. A named volume additionally requires
   typing its name, because it is the one kind that can hold irreplaceable data.

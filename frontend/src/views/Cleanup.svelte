@@ -5,7 +5,7 @@ import Empty from "../components/Empty.svelte";
 import FilterBar from "../components/FilterBar.svelte";
 import RemovalDialog from "../components/RemovalDialog.svelte";
 import { formatBytes, shortRef } from "../lib/format";
-import { kindLabel, resultKey } from "../lib/removal";
+import { isSelected, kindLabel, resultKey, selectedByDefault } from "../lib/removal";
 import { scan } from "../lib/scan.svelte";
 import { matchesQuery } from "../lib/table";
 
@@ -13,9 +13,8 @@ type C = cleanup.Candidate;
 
 let query = $state("");
 let show = $state("all");
-// Deselected safe items. Tracking the exceptions keeps new safe items
-// selected by default after a rescan.
-let excluded = $state(new Set<string>());
+// Items whose selection the user flipped; see isSelected.
+let toggled = $state(new Set<string>());
 let pending = $state<C[] | undefined>();
 
 const all = $derived(scan.result?.report.candidates ?? []);
@@ -34,24 +33,24 @@ const visible = $derived(
 );
 const safe = $derived(visible.filter((c) => c.verdict === "safe"));
 const review = $derived(visible.filter((c) => c.verdict === "review"));
-const selected = $derived(safe.filter((c) => !excluded.has(resultKey(c))));
+const selected = $derived(safe.filter((c) => isSelected(c, toggled)));
 const sum = (cs: C[]) => cs.reduce((t, c) => t + Math.max(c.size, 0), 0);
 
 function toggle(c: C) {
   const k = resultKey(c);
-  const next = new Set(excluded);
+  const next = new Set(toggled);
   if (next.has(k)) next.delete(k);
   else next.add(k);
-  excluded = next;
+  toggled = next;
 }
 
 function selectAll(on: boolean) {
-  const next = new Set(excluded);
+  const next = new Set(toggled);
   for (const c of safe) {
-    if (on) next.delete(resultKey(c));
+    if (selectedByDefault(c) === on) next.delete(resultKey(c));
     else next.add(resultKey(c));
   }
-  excluded = next;
+  toggled = next;
 }
 
 const base: Column<C>[] = [
@@ -117,7 +116,7 @@ const reviewColumns: Column<C>[] = [...base, { id: "reason", label: "Reason", wi
           <td>
             <input
               type="checkbox"
-              checked={!excluded.has(resultKey(c))}
+              checked={isSelected(c, toggled)}
               onchange={() => toggle(c)}
               aria-label="Select {c.name}"
             />

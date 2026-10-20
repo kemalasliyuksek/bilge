@@ -38,3 +38,19 @@ export function summarize(results: sweep.Result[]): Summary {
   }
   return s;
 }
+
+// The build cache is opt-in: removing it loses no data, but the next builds
+// that relied on it start from scratch, so the user picks it explicitly.
+export function selectedByDefault(c: Pick<cleanup.Candidate, "kind">): boolean {
+  return c.kind !== "buildCache";
+}
+
+// toggled holds the items whose selection differs from their default. A
+// rescan then keeps the defaults for new items and the user's choices for
+// known ones.
+export function isSelected(
+  c: Pick<cleanup.Candidate, "kind" | "id">,
+  toggled: Set<string>,
+): boolean {
+  return selectedByDefault(c) !== toggled.has(resultKey(c));
+}

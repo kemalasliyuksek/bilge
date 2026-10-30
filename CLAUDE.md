@@ -7,7 +7,7 @@ project, MIT. Design and cleanup rules: `docs/design.md`.
 ## Overrides of the global rules
 
 - Everything in the repository is English: code, comments, docs, commit
-  messages. Commits use `/commit-en` (Conventional Commits), not `/commit-tr`.
+  messages (Conventional Commits).
 - Commit identity is the personal global one (`kemal@kemalasliyuksek.com`).
   This is not a brand product: no brand name or logo anywhere.
 - Go tests live next to the code (`foo_test.go`), frontend tests next to the

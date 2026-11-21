@@ -16,8 +16,8 @@ and stop containers, and removes what is actually waste without touching what
 you still need. It runs on Linux, macOS and Windows and talks to the local
 engine, or to the one named by `DOCKER_HOST`.
 
-> Status: early development (v0.1.0). Try it on an engine you can afford to lose things
-> on before trusting it with one you cannot.
+> Status: early development. Try it on an engine you can afford to lose things on
+> before trusting it with one you cannot.
 
 ## What it does
 
@@ -74,7 +74,12 @@ Each release has builds for Linux, macOS (universal) and Windows and a
   ```
 
   The last line makes a running GNOME Shell rescan your icons; without it the
-  menu shows bilge without its icon until you log out and back in.
+  menu shows bilge without its icon until you log out and back in. On KDE
+  Plasma, also rebuild the icon cache of that folder:
+
+  ```sh
+  gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
+  ```
 - **macOS**: unzip and move `bilge.app` to Applications. The app is not signed
   yet, so the first time right-click it and choose Open.
 - **Windows**: unzip and run `bilge.exe`. SmartScreen may warn because the

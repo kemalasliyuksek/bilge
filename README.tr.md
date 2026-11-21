@@ -17,7 +17,7 @@ gösterir, container'ları başlatıp durdurmanızı sağlar ve hâlâ ihtiyacı
 şeylere dokunmadan gerçekten artık olanları siler. Linux, macOS ve Windows'ta
 çalışır; yerel engine'e ya da `DOCKER_HOST` ile belirtilene bağlanır.
 
-> Durum: erken geliştirme aşamasında (v0.1.0). Güvenmeden önce, bir şey kaybetmeyi göze
+> Durum: erken geliştirme aşamasında. Güvenmeden önce, bir şey kaybetmeyi göze
 > alabileceğiniz bir engine üzerinde deneyin.
 
 ## Neler yapar
@@ -77,7 +77,12 @@ Her sürümde Linux, macOS (universal) ve Windows derlemeleri ile bir
   ```
 
   Son satır, çalışan GNOME Shell'in ikonları yeniden taramasını sağlar; bu
-  olmadan bilge, oturumu kapatıp açana kadar menüde ikonsuz görünür.
+  olmadan bilge, oturumu kapatıp açana kadar menüde ikonsuz görünür. KDE
+  Plasma'da ayrıca o klasörün ikon önbelleğini yeniden oluşturun:
+
+  ```sh
+  gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
+  ```
 - **macOS**: zip'i açın ve `bilge.app`'i Uygulamalar klasörüne taşıyın.
   Uygulama henüz imzalı olmadığı için ilk açılışta sağ tıklayıp Aç'ı seçin.
 - **Windows**: zip'i açın ve `bilge.exe`'yi çalıştırın. Dosya henüz imzalı

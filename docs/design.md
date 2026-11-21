@@ -67,6 +67,14 @@ A volume is anonymous when it carries the `com.docker.volume.anonymous` label
 (set by Docker 23+) or, for older engines, when its name is a 64 character hex
 string.
 
+An image is dangling when it has no tag. This matches the engine's own
+`dangling=true` filter on both image stores (checked on Docker 29 with the
+containerd store and the classic store), and `just test-integration` compares
+the two on the local engine. Repository digests are deliberately ignored: the
+classic store keeps `repo@sha256:…` on an image whose tag moved to a newer
+pull, which is truly dangling, while the containerd store lists the reference
+of an image pulled by digest among its tags, so it is never dangling there.
+
 Reclaimable size for an image is `Size - SharedSize`: layers shared with other
 images are not freed by removing one of them.
 

@@ -52,7 +52,13 @@ engine with neutral sample data, never from the developer's own engine:
 2. With `DOCKER_HOST=tcp://127.0.0.1:23750`, create a running Compose project
    (`shop`), a removed one that leaves its volume (`blog`), a stopped one
    (`analytics`), a stopped standalone container, an anonymous volume, an
-   empty network, an untagged build and some build cache.
+   empty network, an untagged build and some build cache. The dind engine
+   uses the containerd image store, which keeps no record of a rebuilt
+   image: build twice with different tags and move one tag onto the other
+   image (`docker tag demo-app:latest demo-app:previous`, then
+   `docker rmi demo-app:previous`) to leave an untagged image. Write volume
+   data under a file name the service does not own (Redis rewrites
+   `dump.rdb` on shutdown).
 3. `DOCKER_HOST=tcp://127.0.0.1:23750 just dev`, then capture 1280x800 at 2x
    with headless Chrome: overview (light and dark), containers, cleanup and
    the named-volume dialog.

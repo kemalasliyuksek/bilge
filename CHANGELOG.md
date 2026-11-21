@@ -6,6 +6,8 @@ All notable changes to bilge are listed here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-21
+
 ### Added
 
 - Review images and stopped Compose containers can be selected with
@@ -49,6 +51,7 @@ First release.
   Every item is checked against a fresh scan right before removal.
 - Builds for Linux, macOS (universal) and Windows with `SHA256SUMS`.
 
-[Unreleased]: https://github.com/kemalasliyuksek/bilge/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/kemalasliyuksek/bilge/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/kemalasliyuksek/bilge/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/kemalasliyuksek/bilge/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kemalasliyuksek/bilge/releases/tag/v0.1.0

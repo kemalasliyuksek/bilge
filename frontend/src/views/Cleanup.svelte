@@ -5,7 +5,7 @@ import Empty from "../components/Empty.svelte";
 import FilterBar from "../components/FilterBar.svelte";
 import RemovalDialog from "../components/RemovalDialog.svelte";
 import { formatBytes, shortRef } from "../lib/format";
-import { isSelected, kindLabel, resultKey, selectedByDefault } from "../lib/removal";
+import { bulkSelectable, isSelected, kindLabel, resultKey, setAll } from "../lib/removal";
 import { scan } from "../lib/scan.svelte";
 import { matchesQuery } from "../lib/table";
 
@@ -34,6 +34,9 @@ const visible = $derived(
 const safe = $derived(visible.filter((c) => c.verdict === "safe"));
 const review = $derived(visible.filter((c) => c.verdict === "review"));
 const selected = $derived(safe.filter((c) => isSelected(c, toggled)));
+// Named volumes stay out of bulk selection: each is removed on its own.
+const reviewBulk = $derived(review.filter(bulkSelectable));
+const reviewSelected = $derived(reviewBulk.filter((c) => isSelected(c, toggled)));
 const sum = (cs: C[]) => cs.reduce((t, c) => t + Math.max(c.size, 0), 0);
 
 function toggle(c: C) {
@@ -44,13 +47,9 @@ function toggle(c: C) {
   toggled = next;
 }
 
-function selectAll(on: boolean) {
-  const next = new Set(toggled);
-  for (const c of safe) {
-    if (selectedByDefault(c) === on) next.delete(resultKey(c));
-    else next.add(resultKey(c));
-  }
-  toggled = next;
+// Only the rows the filter shows are selected or cleared.
+function selectAll(cs: C[], on: boolean) {
+  toggled = setAll(cs, toggled, on);
 }
 
 const base: Column<C>[] = [
@@ -69,11 +68,16 @@ const base: Column<C>[] = [
 const safeColumns: Column<C>[] = [{ id: "pick", label: "", width: 44, fixed: true }, ...base, { id: "reason", label: "Reason" }];
 // Reason takes the remaining width so the Remove button never scrolls away.
 const reviewColumns: Column<C>[] = [
+  { id: "pick", label: "", width: 44, fixed: true },
   ...base,
   { id: "reason", label: "Reason" },
   { id: "act", label: "", width: 110, fixed: true },
 ];
 </script>
+
+{#snippet pick(c: C)}
+  <input type="checkbox" checked={isSelected(c, toggled)} onchange={() => toggle(c)} aria-label="Select {c.name}" />
+{/snippet}
 
 {#snippet cells(c: C)}
   <td>{kindLabel[c.kind] ?? c.kind}</td>
@@ -103,7 +107,7 @@ const reviewColumns: Column<C>[] = [
           <p class="sub">No data is lost. Selected items are removed together after one confirmation.</p>
         </div>
         <div class="bulk">
-          <button type="button" onclick={() => selectAll(selected.length !== safe.length)}>
+          <button type="button" onclick={() => selectAll(safe, selected.length !== safe.length)}>
             {selected.length === safe.length ? "Select none" : "Select all"}
           </button>
           <button
@@ -118,14 +122,7 @@ const reviewColumns: Column<C>[] = [
       </header>
       <DataTable id="cleanup-safe" columns={safeColumns} rows={safe} key={resultKey} sortBy="size" sortDir="desc">
         {#snippet row(c: C)}
-          <td>
-            <input
-              type="checkbox"
-              checked={isSelected(c, toggled)}
-              onchange={() => toggle(c)}
-              aria-label="Select {c.name}"
-            />
-          </td>
+          <td>{@render pick(c)}</td>
           {@render cells(c)}
         {/snippet}
       </DataTable>
@@ -134,15 +131,40 @@ const reviewColumns: Column<C>[] = [
 
   {#if review.length > 0}
     <section>
-      <h2>Review <span class="sub">{formatBytes(sum(review))}</span></h2>
-      <p class="sub">
-        Probably waste, but may hold data or belong to a stack stopped on purpose. Removed one at a time.
-      </p>
+      <header>
+        <div>
+          <h2>Review <span class="sub">{formatBytes(sum(review))}</span></h2>
+          <p class="sub">
+            Probably waste, but may belong to a stack stopped on purpose. Nothing is selected by default; named
+            volumes may hold data and are removed one at a time.
+          </p>
+        </div>
+        {#if reviewBulk.length > 0}
+          <div class="bulk">
+            <button type="button" onclick={() => selectAll(reviewBulk, reviewSelected.length !== reviewBulk.length)}>
+              {reviewSelected.length === reviewBulk.length ? "Select none" : "Select all"}
+            </button>
+            <button
+              type="button"
+              class="danger"
+              disabled={reviewSelected.length === 0 || scan.removing}
+              onclick={() => (pending = reviewSelected)}
+            >
+              Remove {reviewSelected.length} · {formatBytes(sum(reviewSelected))}
+            </button>
+          </div>
+        {/if}
+      </header>
       <DataTable id="cleanup-review" columns={reviewColumns} rows={review} key={resultKey} sortBy="size" sortDir="desc">
         {#snippet row(c: C)}
+          <td>
+            {#if bulkSelectable(c)}{@render pick(c)}{/if}
+          </td>
           {@render cells(c)}
           <td class="actions">
-            <button type="button" aria-label="Remove {c.name}" disabled={scan.removing} onclick={() => (pending = [c])}>Remove…</button>
+            {#if !bulkSelectable(c)}
+              <button type="button" aria-label="Remove {c.name}" disabled={scan.removing} onclick={() => (pending = [c])}>Remove…</button>
+            {/if}
           </td>
         {/snippet}
       </DataTable>

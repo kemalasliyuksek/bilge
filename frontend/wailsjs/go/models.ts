@@ -8,6 +8,7 @@ export namespace cleanup {
 	    reason: string;
 	    project: string;
 	    size: number;
+	    confirmByName: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new Candidate(source);
@@ -22,6 +23,7 @@ export namespace cleanup {
 	        this.reason = source["reason"];
 	        this.project = source["project"];
 	        this.size = source["size"];
+	        this.confirmByName = source["confirmByName"];
 	    }
 	}
 	export class Report {

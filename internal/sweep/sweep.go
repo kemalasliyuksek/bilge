@@ -14,8 +14,9 @@ import (
 	"github.com/kemalasliyuksek/bilge/internal/inventory"
 )
 
-// ErrReviewNotAlone rejects a request that mixes a review item with others.
-var ErrReviewNotAlone = errors.New("a review item must be removed on its own")
+// ErrNamedVolumeNotAlone rejects a request that mixes a named volume with
+// other items.
+var ErrNamedVolumeNotAlone = errors.New("a named volume must be removed on its own")
 
 // Request is one item the user confirmed, with the verdict they saw.
 type Request struct {
@@ -55,15 +56,16 @@ var order = map[cleanup.Kind]int{
 // remove in dependency order and a skipped result for every request that is
 // no longer valid.
 func Plan(report cleanup.Report, reqs []Request) ([]cleanup.Candidate, []Result, error) {
-	for _, r := range reqs {
-		if r.Verdict == cleanup.Review && len(reqs) > 1 {
-			return nil, nil, ErrReviewNotAlone
-		}
-	}
-
 	current := make(map[string]cleanup.Candidate, len(report.Candidates))
 	for _, c := range report.Candidates {
 		current[key(c.Kind, c.ID)] = c
+	}
+	if len(reqs) > 1 {
+		for _, r := range reqs {
+			if namedVolume(r, current) {
+				return nil, nil, ErrNamedVolumeNotAlone
+			}
+		}
 	}
 
 	var todo []cleanup.Candidate
@@ -90,6 +92,16 @@ func Plan(report cleanup.Report, reqs []Request) ([]cleanup.Candidate, []Result,
 	}
 	sort.SliceStable(todo, func(i, j int) bool { return order[todo[i].Kind] < order[todo[j].Kind] })
 	return todo, skipped, nil
+}
+
+// namedVolume trusts the fresh report first, so a request cannot hide a named
+// volume behind a safe verdict. A volume the request saw under review counts
+// too, even if it is gone: bundling it at all breaks the rule.
+func namedVolume(r Request, current map[string]cleanup.Candidate) bool {
+	if c, ok := current[key(r.Kind, r.ID)]; ok && c.ConfirmByName {
+		return true
+	}
+	return r.Kind == cleanup.KindVolume && r.Verdict == cleanup.Review
 }
 
 func key(kind cleanup.Kind, id string) string {

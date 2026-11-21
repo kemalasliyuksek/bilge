@@ -110,6 +110,33 @@ func TestVolumes(t *testing.T) {
 	expectVerdict(t, r, KindVolume, anon, Safe)
 }
 
+// Only a named volume can hold data nobody can recreate; it alone is removed
+// on its own and confirmed by typing its name.
+func TestConfirmByNameOnlyForNamedVolumes(t *testing.T) {
+	inv := inventory.Inventory{
+		Containers: []inventory.Container{
+			{ID: "stack", State: inventory.StateExited, Labels: compose("shop")},
+			{ID: "loose", State: inventory.StateExited},
+		},
+		Images: []inventory.Image{
+			{ID: "sha:tagged", Tags: []string{"postgres:18"}},
+			{ID: "sha:dangling"},
+		},
+		Volumes: []inventory.Volume{
+			{Name: "old_db"},
+			{Name: "labelled-anon", Labels: map[string]string{inventory.LabelAnonymousVolume: ""}},
+		},
+		Networks:   []inventory.Network{{ID: "n-free", Name: "old_default"}},
+		BuildCache: []inventory.BuildCacheRecord{{ID: "b1", Size: 1}},
+	}
+	for _, c := range Classify(inv).Candidates {
+		want := c.Kind == KindVolume && c.ID == "old_db"
+		if c.ConfirmByName != want {
+			t.Errorf("%s %s: ConfirmByName = %v, want %v", c.Kind, c.ID, c.ConfirmByName, want)
+		}
+	}
+}
+
 func TestNetworks(t *testing.T) {
 	inv := inventory.Inventory{
 		Containers: []inventory.Container{

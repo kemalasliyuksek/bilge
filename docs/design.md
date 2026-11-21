@@ -49,7 +49,8 @@ Each candidate gets a verdict:
 - **safe**: no data is lost and nothing the user set up on purpose breaks.
   Can be removed in bulk after one confirmation.
 - **review**: probably waste, but removing it can lose data or undo a
-  deliberate setup. Shown separately, selected one by one, never in bulk.
+  deliberate setup. Shown separately and never selected by default. A named
+  volume is removed on its own and confirmed by typing its name.
 
 Anything not listed as a candidate is in use and is never offered for removal.
 
@@ -101,8 +102,10 @@ removing anything the backend:
 1. Takes a fresh snapshot and classifies it again.
 2. Skips every requested item that is no longer a candidate, or whose verdict
    changed since the user saw it ("skipped, changed since the scan").
-3. Rejects a request that contains a review item together with anything else.
-   Review items are removed one per request.
+3. Rejects a request that contains a named volume together with anything
+   else. A named volume is the one candidate that can hold data nobody can
+   recreate, so it is removed one per request. Other review items (tagged
+   images, containers of a Compose project) may be removed in bulk.
 4. Removes in dependency order: containers, then images, volumes, networks,
    and the build cache last. Removing a container never makes bilge remove
    something it did not list.
@@ -116,6 +119,10 @@ engine's error). Progress is reported per item while the removal runs.
   selected item and the expected space. Everything is selected by default
   except the build cache: removing it loses no data, but the next builds that
   relied on it run from scratch, so it is an explicit choice.
-- Review items: no bulk selection. Each has its own "Remove" button and its own
-  confirmation dialog showing the reason. A named volume additionally requires
-  typing its name, because it is the one kind that can hold irreplaceable data.
+- Review images and Compose containers: a checkbox per item, none selected by
+  default, and a "Remove" button of their own, separate from the safe one.
+  "Select all" selects only the review items that match the current filter.
+- Named volumes: no bulk selection. Each has its own "Remove" button and its
+  own confirmation dialog, which requires typing the volume's name.
+- The confirmation dialog lists every item with its reason; a container shows
+  the size of its writable layer, which is what removing it frees.

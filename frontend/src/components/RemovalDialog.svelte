@@ -67,9 +67,6 @@ const statusText = (r: sweep.Result | undefined) => {
       This frees about <strong>{formatBytes(total)}</strong>. Removal cannot be undone.
       {#if !single}Each item is checked again against the engine right before it is removed.{/if}
     </p>
-    {#if single}
-      <p class="reason">{single.reason}</p>
-    {/if}
   {/if}
 
   <ul class="items">
@@ -82,6 +79,9 @@ const statusText = (r: sweep.Result | undefined) => {
         {#if phase !== "confirm"}
           <span class="state" data-status={r?.status ?? "waiting"} title={r?.message}>{statusText(r)}</span>
         {/if}
+      </li>
+      <li class="detail">
+        {c.kind === "container" ? `Writable layer ${formatBytes(c.size)} · ${c.reason}` : c.reason}
       </li>
       {#if r?.message}
         <li class="message">{r.message}</li>
@@ -139,10 +139,6 @@ const statusText = (r: sweep.Result | undefined) => {
     font-size: 1.1rem;
   }
 
-  .reason {
-    color: var(--muted);
-  }
-
   .items {
     max-height: 40vh;
     overflow: auto;
@@ -161,11 +157,18 @@ const statusText = (r: sweep.Result | undefined) => {
     border-bottom: 1px solid var(--line);
   }
 
+  .items li.detail,
   .items li.message {
     display: block;
     padding-left: 7rem;
     color: var(--muted);
     font-size: 0.8rem;
+  }
+
+  /* The detail line belongs to the item above it: one rule per item, not two. */
+  .items li:has(+ li.detail) {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
   .kind {

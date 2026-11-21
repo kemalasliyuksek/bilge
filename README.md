@@ -42,8 +42,9 @@ into two groups instead:
   confirmation. The build cache is left unselected, since removing it makes
   the next builds start from scratch.
 - **Review**: named volumes, tagged images and stopped containers that belong
-  to a Compose project. Shown with the reason and removed one at a time. A
-  named volume must be confirmed by typing its name.
+  to a Compose project. Shown with the reason and never selected by default;
+  images and containers can be selected and removed together. A named volume
+  is removed on its own and must be confirmed by typing its name.
 
 ![Cleanup view with the safe and review groups](docs/screenshots/cleanup.png)
 

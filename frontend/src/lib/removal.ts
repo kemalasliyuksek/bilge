@@ -8,10 +8,15 @@ export const kindLabel: Record<string, string> = {
   buildCache: "Build cache",
 };
 
-// A named volume is the one kind of candidate that can hold data nobody can
-// recreate, so it is the one the user must confirm by typing its name.
-export function needsTypedConfirm(c: Pick<cleanup.Candidate, "kind" | "verdict">): boolean {
-  return c.kind === "volume" && c.verdict === "review";
+// The backend marks named volumes, the one kind of candidate that can hold
+// data nobody can recreate. They are confirmed by typing the name and never
+// selected in bulk; the backend rejects a request that bundles one.
+export function needsTypedConfirm(c: Pick<cleanup.Candidate, "confirmByName">): boolean {
+  return c.confirmByName;
+}
+
+export function bulkSelectable(c: Pick<cleanup.Candidate, "confirmByName">): boolean {
+  return !c.confirmByName;
 }
 
 export function requestFor(c: cleanup.Candidate): sweep.Request {
@@ -39,18 +44,29 @@ export function summarize(results: sweep.Result[]): Summary {
   return s;
 }
 
-// The build cache is opt-in: removing it loses no data, but the next builds
-// that relied on it start from scratch, so the user picks it explicitly.
-export function selectedByDefault(c: Pick<cleanup.Candidate, "kind">): boolean {
-  return c.kind !== "buildCache";
+// Review items are opt-in: they may belong to a stack stopped on purpose. So
+// is the build cache: removing it loses no data, but the next builds that
+// relied on it start from scratch, so the user picks it explicitly.
+export function selectedByDefault(c: Pick<cleanup.Candidate, "kind" | "verdict">): boolean {
+  return c.verdict === "safe" && c.kind !== "buildCache";
 }
+
+type Selectable = Pick<cleanup.Candidate, "kind" | "id" | "verdict">;
 
 // toggled holds the items whose selection differs from their default. A
 // rescan then keeps the defaults for new items and the user's choices for
 // known ones.
-export function isSelected(
-  c: Pick<cleanup.Candidate, "kind" | "id">,
-  toggled: Set<string>,
-): boolean {
+export function isSelected(c: Selectable, toggled: Set<string>): boolean {
   return selectedByDefault(c) !== toggled.has(resultKey(c));
+}
+
+// setAll selects or clears exactly the given items, which are the ones the
+// current filter shows; the selection of hidden items is left as it was.
+export function setAll(cs: Selectable[], toggled: Set<string>, on: boolean): Set<string> {
+  const next = new Set(toggled);
+  for (const c of cs) {
+    if (selectedByDefault(c) === on) next.delete(resultKey(c));
+    else next.add(resultKey(c));
+  }
+  return next;
 }

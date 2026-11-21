@@ -6,6 +6,20 @@ All notable changes to bilge are listed here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Review images and stopped Compose containers can be selected with
+  checkboxes and removed together. Nothing in Review is selected by default,
+  and "Select all" picks only the rows the current filter shows.
+- The removal dialog lists every item with its reason, and the writable layer
+  size for containers.
+
+### Changed
+
+- The backend now rejects a removal request only when it bundles a named
+  volume with other items; other review items may be removed in bulk. Named
+  volumes are still removed one at a time and confirmed by typing their name.
+
 ## [0.1.1] - 2026-10-21
 
 ### Added

@@ -28,17 +28,50 @@ func req(c cleanup.Candidate) Request {
 	return Request{Kind: c.Kind, ID: c.ID, Verdict: c.Verdict}
 }
 
-func TestPlanRejectsReviewWithOthers(t *testing.T) {
-	vol := review(cleanup.KindVolume, "shop_db")
-	img := safe(cleanup.KindImage, "sha:1")
-	_, _, err := Plan(report(vol, img), []Request{req(img), req(vol)})
-	if !errors.Is(err, ErrReviewNotAlone) {
-		t.Fatalf("err = %v, want ErrReviewNotAlone", err)
+func namedVol(name string) cleanup.Candidate {
+	c := review(cleanup.KindVolume, name)
+	c.ConfirmByName = true
+	return c
+}
+
+func TestPlanAllowsReviewItemsInBulk(t *testing.T) {
+	img := review(cleanup.KindImage, "sha:old")
+	ctr := review(cleanup.KindContainer, "shop-web-1")
+	net := safe(cleanup.KindNetwork, "n1")
+
+	todo, skipped, err := Plan(report(img, ctr, net), []Request{req(img), req(ctr), req(net)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(todo) != 3 || len(skipped) != 0 {
+		t.Errorf("todo = %v, skipped = %v, want all three removed", todo, skipped)
+	}
+}
+
+func TestPlanRejectsNamedVolumeWithOthers(t *testing.T) {
+	vol := namedVol("shop_db")
+	img := review(cleanup.KindImage, "sha:old")
+	if _, _, err := Plan(report(vol, img), []Request{req(img), req(vol)}); !errors.Is(err, ErrNamedVolumeNotAlone) {
+		t.Fatalf("err = %v, want ErrNamedVolumeNotAlone", err)
+	}
+
+	// The request is rejected as a whole even when the volume is no longer a
+	// candidate: a UI that bundles a named volume is breaking the rule.
+	gone := Request{Kind: cleanup.KindVolume, ID: "gone_db", Verdict: cleanup.Review}
+	if _, _, err := Plan(report(img), []Request{req(img), gone}); !errors.Is(err, ErrNamedVolumeNotAlone) {
+		t.Fatalf("stale named volume: err = %v, want ErrNamedVolumeNotAlone", err)
+	}
+
+	// A request that hides a named volume behind a safe verdict is caught by
+	// the fresh report, not by what the request claims.
+	disguised := Request{Kind: cleanup.KindVolume, ID: "shop_db", Verdict: cleanup.Safe}
+	if _, _, err := Plan(report(vol, img), []Request{req(img), disguised}); !errors.Is(err, ErrNamedVolumeNotAlone) {
+		t.Fatalf("disguised named volume: err = %v, want ErrNamedVolumeNotAlone", err)
 	}
 
 	todo, _, err := Plan(report(vol), []Request{req(vol)})
 	if err != nil || len(todo) != 1 {
-		t.Fatalf("single review item: todo = %v, err = %v", todo, err)
+		t.Fatalf("named volume alone: todo = %v, err = %v", todo, err)
 	}
 }
 

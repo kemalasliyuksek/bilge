@@ -43,8 +43,9 @@ ayırır:
   Tek bir onayla birlikte silinir. Build cache varsayılan olarak seçili gelmez,
   çünkü silinmesi sonraki build'lerin sıfırdan başlaması demektir.
 - **Review (inceleme)**: isimli volume'ler, etiketli image'ler ve bir Compose
-  projesine ait durmuş container'lar. Gerekçesiyle gösterilir ve tek tek
-  silinir. İsimli bir volume, adı yazılarak onaylanır.
+  projesine ait durmuş container'lar. Gerekçesiyle gösterilir ve varsayılan
+  olarak hiçbiri seçili gelmez; image ve container'lar seçilip birlikte
+  silinebilir. İsimli bir volume tek başına silinir ve adı yazılarak onaylanır.
 
 ![Safe ve review gruplarıyla temizlik ekranı](docs/screenshots/cleanup.png)
 

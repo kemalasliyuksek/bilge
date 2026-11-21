@@ -39,6 +39,9 @@ type Candidate struct {
 	Reason  string  `json:"reason"`
 	Project string  `json:"project"` // Compose project, empty when none
 	Size    int64   `json:"size"`    // bytes expected to be freed, -1 when unknown
+	// ConfirmByName marks a named volume, the one candidate that can hold data
+	// nobody can recreate. It is removed on its own, confirmed by typing its name.
+	ConfirmByName bool `json:"confirmByName"`
 }
 
 type Report struct {
@@ -200,6 +203,7 @@ func volumes(vs []inventory.Volume, u usage) []Candidate {
 		} else {
 			cand.Verdict = Review
 			cand.Reason = "named volume mounted by no container; it may hold data"
+			cand.ConfirmByName = true
 		}
 		out = append(out, cand)
 	}
